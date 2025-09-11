@@ -1,0 +1,21 @@
+- Workflow for a server
+    - Fill hints:
+        - `ai_family = AF_UNSPEC` , IF WE WANT BOTH ipV4 AND iPV6
+        - `AI_SOCKTYPE = sock_stream` for TCP
+        - `ai_flags = AI_PASSIVE`, so the returned address use a wildcard IP which means any local address the host has.
+    - Call `getaddrinfo(NULL, “port-or-servicename”, &hints, &res)`
+    - Iterate over the linked list
+        - For each node: We can create a socket using the node’s family/type/protocol, attempt to bind() to the nod’s ai_addr/ai_addrlen. If bind fails, close that socket and try the nexxt node.
+        - Stop when bind succeeds.
+    - `listen()` ,on the socket you successfully bound
+    - Later freeaddrinfo(res) to release the list.
+- Workflow for a client
+    - Fill hints:
+        - `ai_family = AF_UNSPEC`
+        - `AI_SOCKTYPE = SOCK_STREAM` for TCP
+        - Do not set AI-PASSIVE
+    - Call `getaddrinfo("hostname-or-ip", "port-or-service", &hints, &res)`
+    - Iterate over res
+        - For each node: Create a socket with that node’s family/type/protocol, attempt to connect() to ai_addr. If connection fails, close and try the next node.
+        - Stop when the connection succeeds.
+    - `freeaddrinfo(res)`  when done with the list
