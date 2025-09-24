@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 	 *
 	*/
 	for (p = clientinfo; p != NULL; p = p->ai_next) {
-		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) != -1) {
+		if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
 			perror("client: socket");
 			continue;
 		}
@@ -91,4 +91,3 @@ int main(int argc, char *argv[]) {
 
 
 	
-
